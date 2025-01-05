@@ -1,5 +1,5 @@
-#include <block.h>
-#include <sha256.h>
+#include "block.h"
+#include "../hash/sha256.h"
 
 #include <sstream>
 #include <string>
