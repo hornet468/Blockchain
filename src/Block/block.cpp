@@ -1,5 +1,7 @@
 #include <block.h>
+#include <sha256.h>
 
+#include <sstream>
 #include <string>
 
 
@@ -29,3 +31,24 @@ Block::Block(int indx, const std::string& ts,const std::string& dt,
         return timestamp;
      }
     
+    std::string Block::calculateHash() const {
+        std::string dataToHash = std::to_string(index) + data +
+        timestamp + previousHash;
+
+        unsigned char hash[SHA256_BLOCK_SIZE];
+        SHA256_CTX sha256Context;
+
+        sha256_init(&sha256Context);
+
+        sha256_update(&sha256Context, 
+        reinterpret_cast<const unsigned char*>(dataToHash.c_str()),
+        dataToHash.length());
+
+        sha256_final(&sha256Context, hash);
+
+        std::stringstream ss;
+        for(int i = 0; i < SHA256_BLOCK_SIZE; i++) {
+            ss << std::hex << (int)hash[i];
+        }
+        return ss.str();
+    }
