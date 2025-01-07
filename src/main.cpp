@@ -1,16 +1,35 @@
 #include <iostream>
 #include "blockchain/blockchain.h"
+#include "transactions/transactions.h"  
 
 int main() {
-    Blockchain myBlockchain;
+    // Creating blockchain
+    Blockchain blockchain;
 
-    myBlockchain.addBlock(Block(1, "2025-01-06", "Block 1", myBlockchain.getChain().back().getCurrentHash(), ""));
-    myBlockchain.addBlock(Block(2, "2025-01-07", "Block 2", myBlockchain.getChain().back().getCurrentHash(), ""));
+    // Testing genesis block
+    std::cout << "Genesis Block:" << std::endl;
+    const Block& genesisBlock = blockchain.getChain().front();
+    std::cout << "Index: " << genesisBlock.getIndex() << std::endl;
+    std::cout << "Timestamp: " << genesisBlock.getTimeStamp() << std::endl;
+    std::cout << "Data: " << genesisBlock.getData() << std::endl;
+    std::cout << "Previous Hash: " << genesisBlock.getPreviousHash() << std::endl;
+    std::cout << "Hash: " << genesisBlock.getCurrentHash() << std::endl;
 
-    for (const auto& block : myBlockchain.getChain()) {
-        std::cout << "Block #" << block.getIndex() << " ["
-                  << block.getTimeStamp() << "] : "
-                  << block.getData() << ", Hash: "
-                  << block.getCurrentHash() << std::endl;
+    // Creating new transaction
+    Transactions tx1("Alice", "Bob", 100);
+    Transactions tx2("Bob", "Charlie", 50);
+    
+    blockchain.addTransactions(tx1);
+    blockchain.addTransactions(tx2);
+
+    // create new block
+    blockchain.createNewBlock();
+
+    // Checking the chain after adding a block
+    std::cout << "\nBlockchain after adding a new block:" << std::endl;
+    for (const Block& block : blockchain.getChain()) {
+        std::cout << "Index: " << block.getIndex() << ", Hash: " << block.getCurrentHash() << std::endl;
     }
+
+    return 0;
 }

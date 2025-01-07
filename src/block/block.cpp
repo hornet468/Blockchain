@@ -6,8 +6,9 @@
 
 
 Block::Block(int indx, const std::string& ts,const std::string& dt,
-     const std::string& ph,const std::string& ch) : index(indx),
-     timestamp(ts), data(dt), previousHash(ph) {
+     const std::string& ph,const std::string& ch, std::vector<Transactions> tsx)
+      : index(indx),timestamp(ts), data(dt), previousHash(ph), 
+      transactions(tsx) {
         currentHash = calculateHash();
      }
      
@@ -32,8 +33,13 @@ Block::Block(int indx, const std::string& ts,const std::string& dt,
      }
     
     std::string Block::calculateHash() const {
+      std::string txData;
+      for(const auto& tx : transactions) {
+         txData += tx.getSender() + tx.getReceiver()
+         + std::to_string(tx.getAmount());
+      }
         std::string dataToHash = std::to_string(index) + data +
-        timestamp + previousHash;
+        timestamp + previousHash + txData;
 
         unsigned char hash[SHA256_BLOCK_SIZE];
         SHA256_CTX sha256Context;
