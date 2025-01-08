@@ -22,6 +22,7 @@ public:
     std::string getCurrentTimestamp() const; 
     const std::vector<Block>& getChain() const; 
     const std::vector<Transactions>& getTransactions() const;
+    void mineNewBlock(int difficulty);
 };
 
 #endif

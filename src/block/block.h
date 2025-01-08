@@ -9,6 +9,7 @@ class  Block
 {
 private:
    int index;
+   int nonce;
    std::string timestamp;
    std::string data;
    std::string previousHash;
@@ -18,6 +19,7 @@ public:
      const std::string& ph,const std::string& ch, 
      std::vector<Transactions> tsx);
      int getIndex() const;
+     void mineBlock(int difficulty) ;
      std::string getTimeStamp() const;
      std::string getData() const;
      std::string getPreviousHash() const;

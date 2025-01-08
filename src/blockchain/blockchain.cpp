@@ -1,4 +1,7 @@
 #include "blockchain.h"
+#include <ctime>
+#include <iostream>
+#include <stdexcept>
 
 Blockchain::Blockchain() {
     createGenesisBlock();
@@ -30,11 +33,19 @@ void Blockchain::createNewBlock() {
 }
 
 Block Blockchain::getLastBlock() const {
+    if (chain.empty()) {
+        throw 
+        std::runtime_error("Blockchain is empty, cannot get the last block");
+}
     return chain.back();
 }
 
 std::string Blockchain::getCurrentTimestamp() const {
-    return "2025-01-07"; 
+    std::time_t now = std::time(0);  
+    char buffer[80];
+    struct tm* timeinfo = std::localtime(&now);
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeinfo);
+    return std::string(buffer);
 }
 
 const std::vector<Block>& Blockchain::getChain() const {
@@ -44,3 +55,17 @@ const std::vector<Block>& Blockchain::getChain() const {
 const std::vector<Transactions>& Blockchain::getTransactions() const {
     return currentTransactions;
 }
+
+void Blockchain::mineNewBlock(int difficulty) {
+      if (!currentTransactions.empty()) {
+        Block newBlock(chain.size(), 
+        getCurrentTimestamp(), "New Block Data", 
+        getLastBlock().getCurrentHash(), "", currentTransactions);
+
+        newBlock.mineBlock(difficulty);
+        addBlock(newBlock);
+        currentTransactions.clear();
+       }
+}
+
+
