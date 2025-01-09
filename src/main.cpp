@@ -2,6 +2,7 @@
 #include "blockchain/blockchain.h"
 #include "transactions/transactions.h"
 
+
 int main() {
     // Creating blockchain
     Blockchain blockchain;

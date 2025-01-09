@@ -5,6 +5,7 @@
 #include <vector>
 #include "../transactions/transactions.h"
 
+
 class Blockchain {
 private:
     std::vector<Block> chain;                

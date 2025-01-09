@@ -32,6 +32,7 @@ void Blockchain::createNewBlock() {
     }
 }
 
+
 Block Blockchain::getLastBlock() const {
     if (chain.empty()) {
         throw 

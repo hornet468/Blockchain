@@ -13,4 +13,4 @@ std::string Transactions::getReceiver() const {
 
 double Transactions::getAmount() const {
     return amount;
-}
+} 
