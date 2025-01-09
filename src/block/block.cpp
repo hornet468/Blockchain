@@ -1,6 +1,5 @@
 #include "block.h"
-#include "../hash/sha256.h"
-
+#include <openssl/sha.h>
 #include <sstream>
 #include <string>
 #include <iostream>
@@ -53,17 +52,17 @@ std::string Block::calculateHash() const {
                              timestamp + previousHash + txData + std::to_string(nonce);
 
   
-    unsigned char hash[SHA256_BLOCK_SIZE];
+    unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256_CTX sha256Context;
 
-    sha256_init(&sha256Context);
-    sha256_update(&sha256Context, 
+    SHA256_Init(&sha256Context);
+    SHA256_Update(&sha256Context, 
                   reinterpret_cast<const unsigned char*>(dataToHash.c_str()),
                   dataToHash.length());
-    sha256_final(&sha256Context, hash);
+    SHA256_Final(hash, &sha256Context);
 
     std::stringstream ss;
-    for (int i = 0; i < SHA256_BLOCK_SIZE; i++) {
+    for (int i = 0; i < SHA256_DIGEST_LENGTH; i++) {
         ss << std::hex << (int)hash[i];
     }
     return ss.str();

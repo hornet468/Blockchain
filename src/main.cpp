@@ -23,9 +23,9 @@ int main() {
     blockchain.addTransactions(tx1);
     blockchain.addTransactions(tx2);
 
-    // Maining new block with difficulty level of 4 (meaning the block hash must start with four 0s)
+    // Maining new block with difficulty level of 2
     std::cout << "\nMining new block with difficulty 4..." << std::endl;
-    blockchain.mineNewBlock(4);
+    blockchain.mineNewBlock(2);
 
     // Checking the chain after adding a block
     std::cout << "\nBlockchain after mining and adding a new block:" << std::endl;
