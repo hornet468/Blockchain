@@ -7,7 +7,11 @@
 Block::Block(int indx, const std::string& ts, const std::string& dt,
              const std::string& ph, const std::string& ch, std::vector<Transactions> tsx)
     : index(indx), timestamp(ts), data(dt), previousHash(ph), transactions(tsx) {
-    currentHash = calculateHash();
+    merkleRoot = calculateMerkleRoot();
+    std::string dataToHash = std::to_string(index) + data +
+                             timestamp + previousHash + 
+                            merkleRoot + std::to_string(nonce);
+    currentHash = calculateHash(dataToHash);
 }
 
 int Block::getIndex() const {
@@ -17,15 +21,20 @@ int Block::getIndex() const {
 void Block::mineBlock(int difficulty) {
     std::string str(difficulty, '0'); 
 
+    std::string dataToHash = std::to_string(index) + data + timestamp + previousHash + merkleRoot;
+
     while(currentHash.substr(0, difficulty) != str) {
-    nonce++;
-    currentHash = calculateHash();
-    std::cout << "Attempting hash: " << currentHash << std::endl;  // Debug output
-}
+        nonce++;
+
+        dataToHash = std::to_string(index) + data + timestamp + previousHash + merkleRoot + std::to_string(nonce);
+
+        currentHash = calculateHash(dataToHash); 
+
+        std::cout << "Attempting hash: " << currentHash << std::endl;  
+    }
 
     std::cout << "Block is mined: " << currentHash << "\n";
 }
-
 std::string Block::getData() const {
     return data;
 }
@@ -42,16 +51,7 @@ std::string Block::getTimeStamp() const {
     return timestamp;
 }
 
-std::string Block::calculateHash() const {
-    std::string txData;
-    for (const auto& tx : transactions) {
-        txData += tx.getSender() + tx.getReceiver() + std::to_string(tx.getAmount());
-    }
-
-    std::string dataToHash = std::to_string(index) + data +
-                             timestamp + previousHash + txData + std::to_string(nonce);
-
-  
+std::string Block::calculateHash(const std::string& dataToHash) const {
     unsigned char hash[SHA256_DIGEST_LENGTH];
     SHA256_CTX sha256Context;
 
@@ -66,4 +66,28 @@ std::string Block::calculateHash() const {
         ss << std::hex << (int)hash[i];
     }
     return ss.str();
+}
+std::string Block::calculateMerkleRoot() {
+    std::vector<std::string> hashes;
+
+    for(const auto& tx : transactions) {
+        std::string txData = tx.getSender() + tx.getReceiver() + 
+        std::to_string(tx.getAmount());
+
+        hashes.push_back(calculateHash(txData));
+    }
+    while(hashes.size() > 1) {
+        std::vector<std::string> newHashes;
+        for(size_t i = 0; i < hashes.size(); i += 2){
+            
+            if(i + 1 < hashes.size()) {
+                newHashes.push_back(calculateHash(hashes[i] + hashes[i + 1]));
+            } else {
+                newHashes.push_back(hashes[i]);
+            }
+        }
+        hashes = newHashes;
+    }
+
+    return hashes.empty() ? " " :hashes[0];
 }
