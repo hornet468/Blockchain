@@ -16,7 +16,7 @@ std::string Key::toHexString(const unsigned char* data, size_t length) {
 
 void Key::savePrivateKey(const unsigned char* private_key) {
     std::ofstream privFile("private_key.hex");
-    privFile << toHexString(private_key, 64); // 64 байти приватного ключа
+    privFile << toHexString(private_key, 64); 
     privFile.close();
 }
 
@@ -32,5 +32,5 @@ std::string Key::createPairKey() {
     pubFile << savePublicKey;
     pubFile.close();
 
-    return savePublicKey; // Можна повертати публічний ключ у hex
+    return savePublicKey; 
 }
