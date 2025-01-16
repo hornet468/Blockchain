@@ -18,15 +18,24 @@ void Blockchain::addBlock(const Block& newBlock) {
 }
 
 void Blockchain::addTransactions(const Transactions& tx) {
-    currentTransactions.push_back(tx);
+    Transactions signedTx = tx;
+    signedTx.generateKeyPair(); 
+    signedTx.signTransaction(); 
+    currentTransactions.push_back(signedTx);
 }
 
 void Blockchain::createNewBlock() {
     if (!currentTransactions.empty()) {
+        for (const auto& tx : currentTransactions) {
+            if (!tx.verifySignature()) {
+                throw std::runtime_error("Invalid transaction in pool!");
+            }
+        }
+
         Block newBlock(chain.size(), 
         getCurrentTimestamp(), "New Block Data", 
         getLastBlock().getCurrentHash(), "", currentTransactions);
-        
+
         addBlock(newBlock);
         currentTransactions.clear();
     }

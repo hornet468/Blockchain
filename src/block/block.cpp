@@ -7,13 +7,12 @@
 Block::Block(int indx, const std::string& ts, const std::string& dt,
              const std::string& ph, const std::string& ch, std::vector<Transactions> tsx)
     : index(indx), timestamp(ts), data(dt), previousHash(ph), transactions(tsx) {
-    merkleRoot = calculateMerkleRoot();
-    std::string dataToHash = std::to_string(index) + data +
-                             timestamp + previousHash + 
-                            merkleRoot + std::to_string(nonce);
-    currentHash = calculateHash(dataToHash);
+    for (const auto& tx : transactions) {
+        if (!tx.verifySignature()) {
+            throw std::runtime_error("Invalid block transaction!");
+        }
+    }
 }
-
 int Block::getIndex() const {
     return index;
 }

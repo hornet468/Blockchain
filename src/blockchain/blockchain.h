@@ -3,6 +3,7 @@
 
 #include "../block/block.h"
 #include <vector>
+#include <string>
 #include "../transactions/transactions.h"
 
 

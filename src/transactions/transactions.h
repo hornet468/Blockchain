@@ -8,16 +8,19 @@ private:
     std::string sender;
     std::string receiver;
     std::string signature;
+    std::string publicKey;
+    std::string privateKey;
     double amount;
 
 public:
-    Transactions(const std::string& sn, const std::string& rv, const double am, const std::string& sig);
+    Transactions(const std::string& sender, const std::string& receiver, const double amount);
 
     std::string getSender() const;
     std::string getReceiver() const;
-    std::string setSignature(const std::string& sig);
-    std::string getSignature() const;
     double getAmount() const;
+    void generateKeyPair(); 
+    void signTransaction(); 
+    bool verifySignature() const; 
 };
 
 #endif

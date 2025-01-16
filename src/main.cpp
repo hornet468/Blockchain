@@ -2,12 +2,11 @@
 #include "blockchain/blockchain.h"
 #include "transactions/transactions.h"
 
-
 int main() {
     // Creating blockchain
     Blockchain blockchain;
 
-    // Testing genesis block
+    // Testing Genesis Block
     std::cout << "Genesis Block:" << std::endl;
     const Block& genesisBlock = blockchain.getChain().front();
     std::cout << "Index: " << genesisBlock.getIndex() << std::endl;
@@ -20,14 +19,24 @@ int main() {
     Transactions tx1("Alice", "Bob", 100);
     Transactions tx2("Bob", "Charlie", 50);
     
+    // Signature transactions
+    tx1.generateKeyPair();
+    tx1.signTransaction();
+    std::cout << "Transaction 1 signature valid: " << (tx1.verifySignature() ? "Yes" : "No") << std::endl;
+
+    tx2.generateKeyPair();
+    tx2.signTransaction();
+    std::cout << "Transaction 2 signature valid: " << (tx2.verifySignature() ? "Yes" : "No") << std::endl;
+
+    // Add transactions i pool
     blockchain.addTransactions(tx1);
     blockchain.addTransactions(tx2);
 
-    // Maining new block with difficulty level of 2
-    std::cout << "\nMining new block with difficulty 4..." << std::endl;
+    // Mining new block with difficulty 2
+    std::cout << "\nMining new block with difficulty 2..." << std::endl;
     blockchain.mineNewBlock(2);
 
-    // Checking the chain after adding a block
+    // check chain after add block
     std::cout << "\nBlockchain after mining and adding a new block:" << std::endl;
     for (const Block& block : blockchain.getChain()) {
         std::cout << "Index: " << block.getIndex() << ", Hash: " << block.getCurrentHash() << std::endl;
