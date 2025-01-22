@@ -1,5 +1,7 @@
 #include "blockchain.h"
+#include <chrono>
 #include <ctime>
+#include <sstream>
 #include <iostream>
 #include <stdexcept>
 
@@ -7,10 +9,9 @@ Blockchain::Blockchain() {
     createGenesisBlock();
 }
 
-
 void Blockchain::createGenesisBlock() {
-    Block genesisBlock(0, "2025-01-05", "Genesis Block", "0", "", {}); 
-    chain.push_back(genesisBlock); 
+    Block genesisBlock(0, getCurrentTimestamp(), {}, "0"); 
+    chain.push_back(genesisBlock);
 }
 
 void Blockchain::addBlock(const Block& newBlock) {
@@ -33,20 +34,19 @@ void Blockchain::createNewBlock() {
         }
 
         Block newBlock(chain.size(), 
-        getCurrentTimestamp(), "New Block Data", 
-        getLastBlock().getCurrentHash(), "", currentTransactions);
+                       getCurrentTimestamp(), 
+                       currentTransactions, 
+                       getLastBlock().getCurrentHash());
 
         addBlock(newBlock);
-        currentTransactions.clear();
+        currentTransactions.clear();  
     }
 }
 
-
 Block Blockchain::getLastBlock() const {
     if (chain.empty()) {
-        throw 
-        std::runtime_error("Blockchain is empty, cannot get the last block");
-}
+        throw std::runtime_error("Blockchain is empty, cannot get the last block");
+    }
     return chain.back();
 }
 
@@ -67,15 +67,24 @@ const std::vector<Transactions>& Blockchain::getTransactions() const {
 }
 
 void Blockchain::mineNewBlock(int difficulty) {
-      if (!currentTransactions.empty()) {
+    if (!currentTransactions.empty()) {
+        for (const auto& tx : currentTransactions) {
+            if (!tx.verifySignature()) {
+                throw std::runtime_error("Invalid transaction in pool!");
+            }
+        }
+
         Block newBlock(chain.size(), 
-        getCurrentTimestamp(), "New Block Data", 
-        getLastBlock().getCurrentHash(), "", currentTransactions);
+                       getCurrentTimestamp(), 
+                       currentTransactions, 
+                       getLastBlock().getCurrentHash());
 
+       
         newBlock.mineBlock(difficulty);
-        addBlock(newBlock);
-        currentTransactions.clear();
-       }
-}
 
+        
+        addBlock(newBlock);
+        currentTransactions.clear(); 
+    }
+}
 
