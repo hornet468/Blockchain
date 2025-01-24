@@ -1,10 +1,13 @@
 #include <iostream>
 #include "blockchain/blockchain.h"
 #include "transactions/transactions.h"
+#include "server/server.h"
 
 int main() {
     // Creating blockchain
     Blockchain blockchain;
+
+   
 
     // Testing genesis block
     std::cout << "Genesis Block:" << std::endl;
@@ -44,6 +47,8 @@ int main() {
                   << ", Previous Hash: " << block.getPreviousHash() 
                   << ", Timestamp: " << block.getTimeStamp() << std::endl;
     }
+
+     server();
 
     return 0;
 }

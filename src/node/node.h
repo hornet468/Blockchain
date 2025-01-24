@@ -15,6 +15,7 @@ public:
     Node(const std::string& i);
     Blockchain getBlockchain() const;
     void addPeer(const std::string& peerAdress );
+    std::vector<std::string> getPeers() const;
 };
 
 
