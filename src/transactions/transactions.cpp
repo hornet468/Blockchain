@@ -71,8 +71,8 @@ nlohmann::json Transactions::to_json() const {
     j["sender"] = sender;
     j["receiver"] = receiver;
     j["amount"] = amount;
-    j["signature"] = signature;  // Підпис
-    j["publicKey"] = publicKey;  // Публічний ключ
+    j["signature"] = signature; 
+    j["publicKey"] = publicKey;  
 
     return j;
 }

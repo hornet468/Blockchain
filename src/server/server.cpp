@@ -8,7 +8,7 @@ void server() {
     Node node("Node_one");
 
     server.Post("/add_peer", [&](const httplib::Request& req, httplib::Response& res) {
-        std::string new_peer = req.body;  // Очікуємо адресу вузла в тілі запиту
+        std::string new_peer = req.body;  
         if (!new_peer.empty()) {
             node.addPeer(new_peer);
             res.set_content("Peer added: " + new_peer, "text/plain");
@@ -22,7 +22,7 @@ void server() {
     server.Get("/get_peers", [&](const httplib::Request&, httplib::Response& res) {
         std::string peers_list;
         for (const auto& peer : node.getPeers()) {
-            peers_list += peer + "\n";  // Додаємо кожного сусіда у список
+            peers_list += peer + "\n";  
         }
         if (!peers_list.empty()) {
             res.set_content(peers_list, "text/plain");
@@ -36,7 +36,6 @@ void server() {
    server.Post("/add_block", [&](const httplib::Request& req, httplib::Response& res) {
     std::string new_block_data = req.body;
     if (!new_block_data.empty()) {
-        // Ти можеш створити блок і додати його в блокчейн, використовуючи дані з req.body
         Block newBlock(node.getBlockchain().getChain().size(), node.getBlockchain().getCurrentTimestamp(), {}, node.getBlockchain().getLastBlock().getCurrentHash());
         node.getBlockchain().addBlock(newBlock);
         res.set_content("Block added", "text/plain");

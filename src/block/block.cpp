@@ -57,7 +57,6 @@ std::string Block::calculateMerkleRoot() {
 nlohmann::json Block::to_json() const {
     nlohmann::json j;
     
-    // Додаємо поля з BlockHeader (які є в базовому класі BlockHeader)
     j["index"] = index;
     j["timestamp"] = timestamp;
     j["previousHash"] = previousHash;
@@ -67,7 +66,7 @@ nlohmann::json Block::to_json() const {
     // Додаємо вектор транзакцій
     nlohmann::json txs_json = nlohmann::json::array();
     for (const auto& tx : transactions) {
-        txs_json.push_back(tx.to_json());  // Викликаємо to_json для кожної транзакції
+        txs_json.push_back(tx.to_json());  
     }
     j["transactions"] = txs_json;
 
