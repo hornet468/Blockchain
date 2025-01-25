@@ -5,6 +5,7 @@
 #include <vector>
 #include <string>
 #include "../transactions/transactions.h"
+#include "../utils/json/json.hpp"
 
 
 class Blockchain {
@@ -25,6 +26,7 @@ public:
     const std::vector<Block>& getChain() const; 
     const std::vector<Transactions>& getTransactions() const;
     void mineNewBlock(int difficulty);
+    nlohmann::json toJson() const;
 };
 
 #endif

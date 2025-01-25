@@ -88,3 +88,11 @@ void Blockchain::mineNewBlock(int difficulty) {
     }
 }
 
+nlohmann::json Blockchain::toJson() const {
+    nlohmann::json j;
+    j["chain"] = nlohmann::json::array();
+    for (const auto& block : chain) {
+        j["chain"].push_back(block.to_json());  // Викликаємо to_json для кожного блоку
+    }
+    return j;
+}

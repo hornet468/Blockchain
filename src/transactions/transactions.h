@@ -2,6 +2,7 @@
 #define TRANSACTIONS_H
 
 #include <string>
+#include "../utils/json/json.hpp"
 
 class Transactions {
 private:
@@ -21,6 +22,7 @@ public:
     void generateKeyPair(); 
     void signTransaction(); 
     bool verifySignature() const; 
+       nlohmann::json to_json() const;
 };
 
 #endif

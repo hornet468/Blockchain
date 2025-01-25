@@ -64,3 +64,15 @@ bool Transactions::verifySignature() const {
 
     return result == 0; 
 }
+
+
+nlohmann::json Transactions::to_json() const {
+    nlohmann::json j;
+    j["sender"] = sender;
+    j["receiver"] = receiver;
+    j["amount"] = amount;
+    j["signature"] = signature;  // Підпис
+    j["publicKey"] = publicKey;  // Публічний ключ
+
+    return j;
+}

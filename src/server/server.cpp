@@ -1,6 +1,7 @@
 #include "httplib.h"
 #include "../node/node.h"
 #include <iostream>
+#include "../utils/json/json.hpp"
 
 void server() {
     httplib::Server server;
@@ -30,6 +31,27 @@ void server() {
         }
     });
 
-    std::cout << "Server is running on http://localhost:8080\n";
+   
+
+   server.Post("/add_block", [&](const httplib::Request& req, httplib::Response& res) {
+    std::string new_block_data = req.body;
+    if (!new_block_data.empty()) {
+        // Ти можеш створити блок і додати його в блокчейн, використовуючи дані з req.body
+        Block newBlock(node.getBlockchain().getChain().size(), node.getBlockchain().getCurrentTimestamp(), {}, node.getBlockchain().getLastBlock().getCurrentHash());
+        node.getBlockchain().addBlock(newBlock);
+        res.set_content("Block added", "text/plain");
+    } else {
+        res.set_content("No block available", "text/plain");
+    }
+});
+
+server.Get("getBlockchain", [&](const httplib::Request& req, httplib::Response& res){
+    Blockchain Blockchain = node.getBlockchain();
+    nlohmann::json blockchainJson = Blockchain.toJson();
+
+    res.set_content(blockchainJson.dump(), "application/json"); 
+});
+
+ std::cout << "Server is running on http://localhost:8080\n";
     server.listen("localhost", 8080);
 }

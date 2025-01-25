@@ -8,9 +8,9 @@
 class Node
 {
 private:
+    Blockchain blockchain;
     std::string id;
     std::vector<std::string> peers;
-    Blockchain blockchain;
 public:
     Node(const std::string& i);
     Blockchain getBlockchain() const;
