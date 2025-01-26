@@ -51,6 +51,17 @@ server.Get("getBlockchain", [&](const httplib::Request& req, httplib::Response& 
     res.set_content(blockchainJson.dump(), "application/json"); 
 });
 
+server.Get("/sync", [&](const httplib::Request&, httplib::Response& res) {
+    nlohmann::json blockchainJson = node.getBlockchain().toJson();
+    res.set_content(blockchainJson.dump(), "application/json");
+});
+
+server.set_logger([]( const httplib::Request& req , const httplib::Response& res) {
+        std::cout << "[" << req.method << "]" << "[" << req.path << "]"
+        << "[" <<  res.status << "]\n"; 
+    });
+
  std::cout << "Server is running on http://localhost:8080\n";
     server.listen("localhost", 8080);
+
 }
